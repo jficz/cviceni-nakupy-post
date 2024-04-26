@@ -4,7 +4,7 @@ import '../global.css';
 import './index.css';
 
 // TODO nezapomeňte nastavit svůj login – jednoznačný identifikátor (třeba název účtu na GitHubu)
-//const login = ""
+const login = "jficz"
 
 const response = await fetch(
   'https://nakupy.czechitas.dev/api/mon',
@@ -33,6 +33,7 @@ const HomePage = () => (
         {list.map((item) => (
           <ShopItem 
             key={item.id}
+            id={item}
             name={item.product}
             amount={item.amount + ' ' + item.unit}
             bought={item.done}
@@ -44,6 +45,36 @@ const HomePage = () => (
 );
 
 document.querySelector('#root').innerHTML = render(<HomePage />);
+
+
+for (let i=1; i< 10; i++){
+  console.log(i)
+}
+
+
+const handleDelete = async (e) => {
+// https://nakupy.czechitas.dev/api/:day/:i
+  const itemId = e.target.parentElement.id
+  await fetch(
+      `https://nakupy.czechitas.dev/api/mon/${itemId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: login,
+        },
+        //body: JSON.stringify(body),
+      },
+    );
+
+    window.location.reload();
+}
+
+document.querySelectorAll('.btn-delete').forEach((item) => {
+  item.addEventListener('click', handleDelete)
+})
+
+
 
 document.querySelector('.newitem-form')
   .addEventListener('submit', async (e) => {
@@ -75,3 +106,4 @@ document.querySelector('.newitem-form')
     window.location.reload();
   }
 );
+
